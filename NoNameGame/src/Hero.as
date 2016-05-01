@@ -185,18 +185,14 @@ package
 		///////////////////////////////////////////Granade and Arrow Functions///////////////////////////////////////////////
 		public function throwGranade():void
 		{
-			if (Main.instance.pauseboolean==false)
-			{
-				var granade:Granade;
-				granade = new Granade(model.x, model.y-10, currentlvl, pointingArrow.model.rotation, model.scaleX)
-				granades.push(granade);
-				throwingGranade=false;
-			}
-			
+			var granade:Granade;
+			granade = new Granade(model.x, model.y-10, currentlvl, pointingArrow.model.rotation, model.scaleX)
+			granades.push(granade);
+			throwingGranade=false;
 		}
 		public function arrowForThrowingGranade():void
 		{
-			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl);
+			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl,model.scaleX);
 			currentlvl.addEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
 			
 		}		
@@ -207,7 +203,7 @@ package
 		}
 		protected function updateArrowForThrowingGranade(event:Event):void
 		{
-			pointingArrow.update(model.x+10*model.scaleX, model.y-model.height/2, model.scaleX);
+			pointingArrow.update(model.x+10*model.scaleX, model.y-model.height/2);
 		}
 		public function uptdateGranadeCounters():void
 		{
@@ -223,13 +219,8 @@ package
 		}
 		public function flyByGranadeHit(direction:Point, force:int):void
 		{
-			block=true;
 			model.x += direction.x * force;
 			model.y += direction.y * force;
-			model.MC_model.gotoAndPlay("Damage");
-			damagecounter=framecontador;
-			damagecounter+=10
-			
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		public function destroy():void
