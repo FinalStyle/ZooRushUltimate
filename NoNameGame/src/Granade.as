@@ -31,29 +31,15 @@ package
 		public var thisparent:MovieClip
 		public function Granade(posX:Number, posY:Number, parent:MovieClip, rotation:Number, scaleX:int)
 		{
-			
+			trace("Rotacion", rotation)
 			model = Locator.assetsManager.getMovieClip("MCGranade");
 			parent.addChild(model);
 			model.x=posX;
 			model.y=posY;
-			model.scaleX=scaleX;
-			
 			radians = rotation * Math.PI / 180;
 			degrees = rotation;
-			
 			direction.x = Math.cos(radians);
 			direction.y = Math.sin(radians);
-			
-			if(model.scaleX>0)
-			{
-				model.MC_graphic.rotation = -rotation;
-			}
-			else
-			{
-				model.MC_graphic.rotation = rotation;
-			}
-			
-			
 		}
 		public function fall():void
 		{
@@ -63,10 +49,10 @@ package
 		public function update():void
 		{
 			fall();
-			model.x += direction.x * speed *model.scaleX;
+			model.x += direction.x * speed;
 			if(!fallen)
 			{
-				model.y += direction.y * speed * model.scaleX;
+				model.y += direction.y * speed;
 			}
 			currentColdownToApplyForceOnPlayer-=1000/60;
 			if(currentColdownToApplyForceOnPlayer<=0)
@@ -77,7 +63,7 @@ package
 			{
 				force=0;
 			}
-				
+			
 		}
 		public function destroy(parent:MovieClip):void
 		{
