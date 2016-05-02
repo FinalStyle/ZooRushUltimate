@@ -10,6 +10,12 @@ package
 	
 	public class Hero
 	{
+		public const ANIM_IDLE:String= "Idle";
+		public const ANIM_RUN:String= "Run";
+		public const ANIM_JUMPIDLE:String= "Jump_Idle";
+		public const ANIM_JUMPSTART:String= "Jump_Start";
+		public const ANIM_DMG:String= "Damage";
+		
 		public var hp:int = 100;
 		public var model:MovieClip;
 		public var speed:int = 10;
@@ -81,7 +87,7 @@ package
 			if (block&&framecontador==damagecounter)
 			{
 				block=false;
-				model.MC_model.gotoAndPlay("Idle");
+				changeAnimation(ANIM_IDLE);
 			}
 			checkKeys();
 			fall();
@@ -119,8 +125,7 @@ package
 			}
 			else if(fallSpeed<0&&!block)
 			{
-				model.MC_model.gotoAndPlay("Jump_Idle");
-				
+				changeAnimation(ANIM_JUMPIDLE);			
 				
 			}
 			else
@@ -170,7 +175,7 @@ package
 				
 				if(!moviendoce&&!isjumping)
 				{
-					model.MC_model.gotoAndPlay("Run");
+					changeAnimation(ANIM_RUN);
 				}
 				model.x+=speed*direction;
 				moviendoce=true;
@@ -181,7 +186,7 @@ package
 			if (runtrigger!=isjumping&&isjumping==false)
 			{
 				
-				model.MC_model.gotoAndPlay("Run");
+				changeAnimation(ANIM_RUN);
 				
 				
 			}
@@ -234,7 +239,7 @@ package
 			block=true;
 			model.x += direction.x * force;
 			model.y += direction.y * force;
-			model.MC_model.gotoAndPlay("Damage");
+			changeAnimation(ANIM_DMG);
 			damagecounter=framecontador;
 			damagecounter+=10
 			if (arrowbool==true)
@@ -289,7 +294,7 @@ package
 						fallSpeed=-18;
 						canJump = false;
 						JumpContador++;
-						model.MC_model.gotoAndPlay("Jump_Start");
+						changeAnimation(ANIM_JUMPSTART);
 						isjumping=true;
 						Main.instance.audioselection = new SoundController(Main.instance.jumpsound);
 						
@@ -352,75 +357,51 @@ package
 		}
 		protected function keyDown(e:KeyboardEvent):void
 		{
-			
 			switch(e.keyCode)
 			{
 				case upKey:
 				{
-					
 					doublePressingRightDown=false;
 					doublePressingRightUp=false;
 					up=true;
-					
-					
 					break;
 				}
 				case downKey:
 				{
-					
 					doublePressingRightDown=false;
 					doublePressingRightUp=false;
 					down=true;
-					
-					
 					break;
 				}
 				case leftKey:
 				{
-					
 					doublePressingRightDown=false;
 					doublePressingRightUp=false;
 					left=true;
-					
-					
 					break;
 				}
 				case rightKey:
 				{
-					
 					doublePressingRightDown=false;
 					doublePressingRightUp=false;
 					right=true;
-					
-					
 					break;
 				}
 				case shootKey:
 				{
-					
-					
 					shoot();
 					break;
-					
 				}
 				case atk1Key:
 				{
 					if(!holding&&Main.instance.pauseboolean==false&&!block)
 					{
-						trace("1")
-						
-						
 						holding=true;
 						arrowForThrowingGranade();
 						throwingGranade=true;
-						
-						
-						
-						
 					}
 					else if (Main.instance.pauseboolean==false&&!block)
 					{
-						trace("2")
 						throwGranade();
 						deleteArrowForThrowingGranade();
 						holding=false;
@@ -450,9 +431,8 @@ package
 					moviendoce=false;
 					if (!isjumping)
 					{
-						model.MC_model.gotoAndPlay("Idle");
+						changeAnimation(ANIM_IDLE);
 					}
-					
 					break;
 				}
 				case rightKey:
@@ -461,11 +441,17 @@ package
 					moviendoce=false;
 					if (!isjumping)
 					{
-						model.MC_model.gotoAndPlay("Idle");
+						changeAnimation(ANIM_IDLE);
 					}
-					
 					break;
 				}
+			}
+		}
+		public function changeAnimation(name:String):void
+		{
+			if(model.currentLabel!=name)
+			{
+				model.MC_model.gotoAndPlay(name)
 			}
 		}
 	}
