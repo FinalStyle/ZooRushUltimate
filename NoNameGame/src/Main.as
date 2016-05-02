@@ -156,7 +156,7 @@ package
 					break;
 				}
 					
-				case Keyboard.CONTROL:
+				case Keyboard.P:
 				{
 					if (gamestarted)
 					{
@@ -168,7 +168,6 @@ package
 						else if (pauseboolean)
 						{
 							pause.pausedoff();
-							
 						}
 					}
 					break;
@@ -297,7 +296,7 @@ package
 			playersGlobalPositionNearestToEdges= new Vector.<Point>;
 			playersLocalPositionNearestToEdges= new Vector.<Point>;
 			
-			
+			gameEnded=false;
 			Locator.mainStage.addEventListener(Event.ENTER_FRAME, update)
 			Locator.mainStage.addEventListener(MouseEvent.CLICK, offCamera);
 			
@@ -350,8 +349,6 @@ package
 						canZoomIn=false
 					}
 				}
-				//trace(cam.zoom)
-				//*****checkPlayersColitions esta fuera del if porque necesito seguir comprobando colisiones del jugador que gana*****//
 				checkPlayersColitions();
 				
 				if(allPlayers.length==1)
@@ -377,13 +374,6 @@ package
 						camLookAt.y+=3;
 					}
 				}
-				/*else
-				{
-				for (var j:int = 0; j < allCannons.length; j++) 
-				{
-				allCannons[j].update(GetNearestPlayerToCannon(allCannons[j].model));
-				}
-				}*/
 			}
 		}
 		public function victorysound():void
@@ -461,7 +451,6 @@ package
 					highestValues.y=playersLocalPositions[i].y;
 				}
 			}
-			//trace("Low", lowestValues, "High", highestValues)
 			tempPlayer.push(lowestValues);
 			tempPlayer.push(highestValues);
 			playersLocalPositionNearestToEdges=tempPlayer;
@@ -492,13 +481,9 @@ package
 					highestValues.y=playersGlobalPositions[i].y;
 				}
 			}
-			//trace("Low", lowestValues, "High", highestValues)
 			tempPlayer.push(lowestValues);
 			tempPlayer.push(highestValues);
 			playersGlobalPositionNearestToEdges=tempPlayer;
-			
-			
-			
 		}
 		public function getPlayerPositionFromLocalToGlobal(player:Hero):void
 		{

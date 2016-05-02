@@ -5,6 +5,7 @@ package
 	import flash.display.MovieClip;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
+	import flash.geom.Point;
 	import flash.ui.Keyboard;
 	
 	public class Pause
@@ -34,7 +35,7 @@ package
 					if (optionnumber>1)
 					{
 						optionnumber--
-						Main.instance.audioselection = new SoundController(Main.instance.selectionsound);
+							Main.instance.audioselection = new SoundController(Main.instance.selectionsound);
 						Main.instance.audioselection.play(0);
 						Main.instance.audioselection.volume=0.3;
 					}
@@ -47,7 +48,7 @@ package
 					if (optionnumber<3)
 					{
 						optionnumber++
-						Main.instance.audioselection = new SoundController(Main.instance.selectionsound);
+							Main.instance.audioselection = new SoundController(Main.instance.selectionsound);
 						Main.instance.audioselection.play(0);
 						Main.instance.audioselection.volume=0.3;
 					}
@@ -73,15 +74,15 @@ package
 						Main.instance.audioselection.volume=0.4;
 					}
 					else
-					{
-						pausedoff()
-						Main.instance.destroyall()
-						Locator.resetassets()
-						Main.instance.mainfunction();
-						Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
-						Main.instance.audioselection.play(0);
-						Main.instance.audioselection.volume=0.4;
-					}
+				{
+					pausedoff()
+					Main.instance.destroyall()
+					Locator.resetassets()
+					Main.instance.mainfunction();
+					Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
+					Main.instance.audioselection.play(0);
+					Main.instance.audioselection.volume=0.4;
+				}
 					
 					break;
 				
