@@ -6,6 +6,7 @@ package
 	
 	import flash.display.MovieClip;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	
 	public class Granade
 	{
@@ -40,6 +41,11 @@ package
 			degrees = rotation;
 			direction.x = Math.cos(radians);
 			direction.y = Math.sin(radians);
+			
+			var lanzamientosound:Sound=Locator.assetsManager.getSound("bombalanzamiento")
+			
+			Main.instance.audioselection=new SoundController (lanzamientosound)
+			Main.instance.audioselection.play(0);
 		}
 		public function fall():void
 		{

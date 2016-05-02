@@ -6,6 +6,7 @@ package
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.geom.Point;
+	import flash.media.Sound;
 	
 	public class Hero
 	{
@@ -60,6 +61,7 @@ package
 		public var directionToFlyByGranade:Point = new Point;
 		public var forceAppliedByGranade:int = 20;
 		public var rotacionoriginal:int;
+		public var arrowbool:Boolean=false;
 		
 		public function Hero(up:int, down:int, right:int, left:int, shoot:int, atk1:int)
 		{
@@ -90,13 +92,17 @@ package
 			}
 			uptdateGranadeCounters();
 			if(gotHitByGranade)
-			{
+			{				
 				flyByGranadeHit(directionToFlyByGranade, forceAppliedByGranade);
 				forceAppliedByGranade--;
 				if(forceAppliedByGranade<=5)
 				{
 					gotHitByGranade=false;
 					forceAppliedByGranade=20;
+					var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
+					
+					Main.instance.audioselection=new SoundController (explosionsound)
+					Main.instance.audioselection.play(0);
 				}
 			}
 			
@@ -114,7 +120,7 @@ package
 			else if(fallSpeed<0&&!block)
 			{
 				model.MC_model.gotoAndPlay("Jump_Idle");
-			
+				
 				
 			}
 			else
@@ -127,13 +133,13 @@ package
 		{
 			if (Main.instance.pauseboolean==false)
 			{
-					var bulletModel:MovieClip = Locator.assetsManager.getMovieClip("MCBullet");
-			Locator.mainStage.addChild(bulletModel);
-			bulletModel.x = model.x+20
-			bulletModel.y = model.y-model.height/2+bulletModel.height/2
-			bullet.push(bulletModel);
+				var bulletModel:MovieClip = Locator.assetsManager.getMovieClip("MCBullet");
+				Locator.mainStage.addChild(bulletModel);
+				bulletModel.x = model.x+20
+				bulletModel.y = model.y-model.height/2+bulletModel.height/2
+				bullet.push(bulletModel);
 			}
-		
+			
 		}
 		public function moveBullets():void
 		{
@@ -194,12 +200,14 @@ package
 		{
 			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl,model.scaleX);
 			currentlvl.addEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
+			arrowbool=true;
 			
 		}		
 		public function deleteArrowForThrowingGranade():void
 		{
 			currentlvl.removeEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
 			pointingArrow.destroy(currentlvl)
+			arrowbool=false;
 		}
 		protected function updateArrowForThrowingGranade(event:Event):void
 		{
@@ -207,13 +215,17 @@ package
 		}
 		public function uptdateGranadeCounters():void
 		{
+			
 			for (var i:int = granades.length-1; i >= 0; i--) 
 			{
 				granades[i].currentTimeToExplode-=1000/60;
 				if (granades[i].currentTimeToExplode<=0) 
 				{
+					var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
 					granades[i].destroy(currentlvl);
 					granades.splice(i, 1);
+					Main.instance.audioselection=new SoundController (explosionsound)
+					Main.instance.audioselection.play(0);
 				}
 			}
 		}
@@ -225,6 +237,12 @@ package
 			model.MC_model.gotoAndPlay("Damage");
 			damagecounter=framecontador;
 			damagecounter+=10
+			if (arrowbool==true)
+			{
+				deleteArrowForThrowingGranade();
+				throwingGranade=false;
+				holding=false;
+			}
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		public function destroy():void
@@ -340,9 +358,9 @@ package
 				case upKey:
 				{
 					
-						doublePressingRightDown=false;
-						doublePressingRightUp=false;
-						up=true;
+					doublePressingRightDown=false;
+					doublePressingRightUp=false;
+					up=true;
 					
 					
 					break;
@@ -350,9 +368,9 @@ package
 				case downKey:
 				{
 					
-						doublePressingRightDown=false;
-						doublePressingRightUp=false;
-						down=true;
+					doublePressingRightDown=false;
+					doublePressingRightUp=false;
+					down=true;
 					
 					
 					break;
@@ -360,9 +378,9 @@ package
 				case leftKey:
 				{
 					
-						doublePressingRightDown=false;
-						doublePressingRightUp=false;
-						left=true;
+					doublePressingRightDown=false;
+					doublePressingRightUp=false;
+					left=true;
 					
 					
 					break;
@@ -370,19 +388,19 @@ package
 				case rightKey:
 				{
 					
-						doublePressingRightDown=false;
-						doublePressingRightUp=false;
-						right=true;
+					doublePressingRightDown=false;
+					doublePressingRightUp=false;
+					right=true;
 					
 					
 					break;
 				}
 				case shootKey:
 				{
-			
 					
-						shoot();
-						break;
+					
+					shoot();
+					break;
 					
 				}
 				case atk1Key:
@@ -392,9 +410,9 @@ package
 						trace("1")
 						
 						
-							holding=true;
-							arrowForThrowingGranade();
-							throwingGranade=true;
+						holding=true;
+						arrowForThrowingGranade();
+						throwingGranade=true;
 						
 						
 						

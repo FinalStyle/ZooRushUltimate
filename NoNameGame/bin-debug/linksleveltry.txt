@@ -8,3 +8,7 @@ redpanda=images/Pixel.png
 &jumpsound=sounds/Jump.mp3
 &yeahsound=sounds/YeahKid.mp3
 &victoryhorn=sounds/PartyHorn.mp3
+&bombarebote=sounds/Rebote de bomba.mp3
+&explosion=sounds/Explosion.mp3
+&bombalanzamiento=sounds/Lanzamiento de bomba.mp3
+&death=sounds/Death.mp3
