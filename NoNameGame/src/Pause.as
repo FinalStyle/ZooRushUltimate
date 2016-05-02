@@ -67,7 +67,7 @@ package
 					{
 						pausedoff()						
 						Main.instance.destroyall()
-						Main.instance.evStartGame(currentlevel)
+						Main.instance.evStartGame(currentlevel, Main.instance.playersCount)
 						Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
 						Main.instance.audioselection.play(0);
 						Main.instance.audioselection.volume=0.4;

@@ -19,10 +19,6 @@ package
 	{
 		public static var instance:Main;
 		
-		public var player:Hero;
-		public var player2:Hero;
-		public var player3:Hero;
-		public var player4:Hero;
 		public var level:MovieClip;
 		public var gamestarted:Boolean=false;
 		public var gameEnded:Boolean = false;
@@ -31,7 +27,9 @@ package
 		public var allWallsOfLevel1:Array;
 		public var deadline:MovieClip;
 		
+
 		public var allPlayers:Vector.<Hero>;
+		public var playersCount:int;
 		//////////////////////////////////////CameraSet////////////////////////////////////////////
 		public var camLookAt:MovieClip;
 		public var mid2Players:Point;
@@ -215,7 +213,7 @@ package
 					else if (w==false&&Locator.mainStage.contains(menu2))
 					{
 						Locator.mainStage.removeChild(menu2);
-						evStartGame("MCLevel2");
+						evStartGame("MCLevel2", 4);
 						gamestarted=true;
 						audioselection = new SoundController(aceptarsounds);
 						audioselection.play(0);
@@ -225,7 +223,7 @@ package
 					else if (w==true&&Locator.mainStage.contains(menu2))
 					{
 						Locator.mainStage.removeChild(menu2);
-						evStartGame("MCLevel1");
+						evStartGame("MCLevel1", 2);
 						gamestarted=true;
 						audioselection = new SoundController(aceptarsounds);
 						audioselection.play(0);
@@ -236,8 +234,10 @@ package
 			}
 			
 		}
-		public function evStartGame(level:String):void
+		public function evStartGame(level:String, playersCountForGame:int):void
 		{
+			playersCount = playersCountForGame;
+			var player:Hero;
 			var song:Sound=	Locator.assetsManager.getSound("song1");
 			audio = new SoundController(song);
 			audio.play(11)
@@ -262,7 +262,8 @@ package
 			
 			
 			this.level=Locator.assetsManager.getMovieClip(level);
-			
+			this.level.MC_spawn.alpha=0
+			this.level.MC_spawn2.alpha=0
 			camLookAt=Locator.assetsManager.getMovieClip("MCBackGround");
 			camLookAt.scaleX = camLookAt.scaleY = 0.05;
 			camLookAt.alpha=0;
@@ -279,39 +280,68 @@ package
 			allPlatformsToArrayLevel1();
 			allWallsToArrayLevel1();
 			
+			for (var j:int = 0; j < playersCount; j++) 
+			{
+				if(j==0)
+				{
+					player = new RedPanda(Keyboard.W, Keyboard.S, Keyboard.D, Keyboard.A,Keyboard.SPACE, Keyboard.Q);
+					allPlayers.push(player);
+				}
+				else if(j==1)
+				{
+					player = new RedPanda(Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.COMMA, Keyboard.M);
+					allPlayers.push(player);
+				}
+				else if(j==2)
+				{
+					player = new RedPanda(Keyboard.Y, Keyboard.H, Keyboard.J, Keyboard.G, Keyboard.K, Keyboard.L);
+					allPlayers.push(player);
+				}
+				else if(j==3)
+				{
+					player = new RedPanda(Keyboard.NUMPAD_8, Keyboard.NUMPAD_5, Keyboard.NUMPAD_6, Keyboard.NUMPAD_4, Keyboard.NUMPAD_7, Keyboard.NUMPAD_9);
+					allPlayers.push(player);
+				}	
+			}
 			
-			player = new RedPanda(Keyboard.W, Keyboard.S, Keyboard.D, Keyboard.A,Keyboard.SPACE, Keyboard.Q);
-			player2 = new RedPanda(Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.COMMA, Keyboard.M);
-			player3 = new RedPanda(Keyboard.Y, Keyboard.H, Keyboard.J, Keyboard.G, Keyboard.K, Keyboard.L);
-			player4 = new RedPanda(Keyboard.NUMPAD_8, Keyboard.NUMPAD_5, Keyboard.NUMPAD_6, Keyboard.NUMPAD_4, Keyboard.NUMPAD_7, Keyboard.NUMPAD_9);
 			
-			player.spawn(this.level.MC_spawn.x, this.level.MC_spawn.y, this.level);
-			player2.spawn(this.level.MC_spawn2.x, this.level.MC_spawn2.y, this.level);
-			player3.spawn(this.level.MC_spawn.x+500, this.level.MC_spawn.y, this.level);
-			player4.spawn(this.level.MC_spawn2.x-500, this.level.MC_spawn2.y, this.level);
-			player2.model.scaleX*=-1;
-			player4.model.scaleX*=-1;
 			
-			allPlayers.push(player);
-			allPlayers.push(player2);
-			allPlayers.push(player3);
-			allPlayers.push(player4);
-			getPlayerPositionFromLocalToGlobal(player);
-			getPlayerPositionFromLocalToGlobal(player2);
-			getPlayerPositionFromLocalToGlobal(player4);
+			for (var i:int = 0; i < allPlayers.length; i++) 
+			{
+				if(i==0)
+				{
+					allPlayers[i].spawn(this.level.MC_spawn.x, this.level.MC_spawn.y, this.level);
+				}
+				else if(i==1)
+				{
+					allPlayers[i].model.scaleX*=-1;
+					allPlayers[i].spawn(this.level.MC_spawn2.x, this.level.MC_spawn2.y, this.level);
+				}
+				else if(i==2)
+				{
+					allPlayers[i].spawn(this.level.MC_spawn.x+500, this.level.MC_spawn.y, this.level);
+				}
+				else if(i==3)
+				{
+					allPlayers[i].model.scaleX*=-1;
+					allPlayers[i].spawn(this.level.MC_spawn2.x-500, this.level.MC_spawn2.y, this.level);
+				}
+				getPlayerPositionFromLocalToGlobal(allPlayers[i]);
+			}
+			
 			playersGlobalPositionNearestToEdges= new Vector.<Point>;
 			playersLocalPositionNearestToEdges= new Vector.<Point>;
 			
 			gameEnded=false;
 			Locator.mainStage.addEventListener(Event.ENTER_FRAME, update)
-			Locator.mainStage.addEventListener(MouseEvent.CLICK, offCamera);
+			//Locator.mainStage.addEventListener(MouseEvent.CLICK, offCamera);
 			
 		}
 		
-		protected function offCamera(event:MouseEvent):void
+		/*protected function offCamera(event:MouseEvent):void
 		{
-			zoomIn();
-		}
+		zoomIn();
+		}*/
 		//////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////Zoom////////////////////////////////////////
 		protected function zoomIn():void
@@ -713,7 +743,7 @@ package
 			cam.off();
 			cam=new Camera
 			Locator.mainStage.removeEventListener(Event.ENTER_FRAME, update)
-			Locator.mainStage.removeEventListener(MouseEvent.CLICK, offCamera);
+			//Locator.mainStage.removeEventListener(MouseEvent.CLICK, offCamera);
 			audio.stop();
 		}
 	}
