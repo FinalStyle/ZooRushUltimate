@@ -88,10 +88,10 @@ package
 			menu1=Locator.assetsManager.getMovieClip("MC_Menu1");
 			menu2=Locator.assetsManager.getMovieClip("MC_Menu2");
 			creditos=Locator.assetsManager.getMovieClip("MC_Creditos");
-			/*menu1.scaleX=1.3;
-			menu1.scaleY=1.3;
-			menu2.scaleX=1.3;
-			menu2.scaleY=1.3;*/
+			menu1.scaleX=0.5;
+			menu1.scaleY=0.5;
+			menu2.scaleX=0.5;
+			menu2.scaleY=0.5;
 			Locator.mainStage.addChild(menu1)
 			menu1.MC_creditos.alpha=0
 			w=true;
