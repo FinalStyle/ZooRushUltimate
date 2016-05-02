@@ -44,6 +44,8 @@ package
 		public var pause:Pause=new Pause;
 		public var pauseboolean:Boolean=false;
 		public var stop:Boolean=false;
+		public var fixCamera:Boolean;
+		public var fixCameraTimer:Number;
 		/////////////////////////////////////////Menu//////////////////////////////////////////////////
 		public var w:Boolean;
 		public var s:Boolean;
@@ -321,8 +323,8 @@ package
 		{
 			if(canZoomOut)
 			{
-			canZoomIn=false;
-			cam.smoothZoom = cam.zoom / 1.3;
+				canZoomIn=false;
+				cam.smoothZoom = cam.zoom / 1.3;
 			}
 			
 		}		
@@ -393,6 +395,7 @@ package
 				audioselection.play(0);
 				audioselection.volume=0.3;
 				bool=true
+				allPlayers[0].block=true;
 			}
 		}
 		public function GetNearestPlayerToCannon(cannon:MovieClip):Point 
@@ -515,6 +518,7 @@ package
 		
 		public function checkCamera():void
 		{
+			
 			mid2Players.x = (playersLocalPositionNearestToEdges[0].x + playersLocalPositionNearestToEdges[1].x)/2;
 			mid2Players.y = (playersLocalPositionNearestToEdges[0].y + playersLocalPositionNearestToEdges[1].y)/2;
 			if(playersGlobalPositionNearestToEdges[0].x<sideLimitsX)
@@ -540,9 +544,35 @@ package
 			{
 				zoomIn()
 			}
-			camLookAt.x=mid2Players.x;
-			camLookAt.y=mid2Players.y;
-			trace(canZoomIn);
+			if(!fixCamera)
+			{
+				camLookAt.x=mid2Players.x;
+				camLookAt.y=mid2Players.y;
+			}
+			else
+			{
+				if(camLookAt.x>=mid2Players.x+10)
+				{
+					camLookAt.x-=5;
+				}
+				else if(camLookAt.x<=mid2Players.x-10)
+				{
+					camLookAt.x+=5;
+				}
+				if(camLookAt.y>=mid2Players.y+10)
+				{
+					camLookAt.y-=5;
+				}
+				else if(camLookAt.y<=mid2Players.y-10)
+				{
+					camLookAt.y+=5;
+				}
+				fixCameraTimer-=1000/60;
+				if(fixCameraTimer<=0)
+				{
+					fixCamera=false;
+				}
+			}
 		}
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//****************************************** Colition Checks ***********************************************************//
@@ -558,6 +588,8 @@ package
 					playersLocalPositionNearestToEdges=new Vector.<Point>;
 					playersGlobalPositions= new Vector.<Point>;
 					playersLocalPositions= new Vector.<Point>;
+					fixCamera=true;
+					fixCameraTimer=2000;
 				}
 			}
 		}
