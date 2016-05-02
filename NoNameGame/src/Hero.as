@@ -219,8 +219,12 @@ package
 		}
 		public function flyByGranadeHit(direction:Point, force:int):void
 		{
+			block=true;
 			model.x += direction.x * force;
 			model.y += direction.y * force;
+			model.MC_model.gotoAndPlay("Damage");
+			damagecounter=framecontador;
+			damagecounter+=10
 		}
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		public function destroy():void
