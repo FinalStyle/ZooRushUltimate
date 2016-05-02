@@ -63,14 +63,19 @@ package
 		protected function evRefreshCameraZoom(event:Event):void
 		{
 			zoom += (currentTarget - zoom) / delayZoom;
-			if(Math.abs( (currentTarget - zoom) ) < 0.0002)
+			
+			if(Math.abs( (currentTarget - zoom) ) < 0.002)
 			{
 				zoom = currentTarget;
 				Locator.mainStage.removeEventListener(Event.ENTER_FRAME, evRefreshCameraZoom);
-				if(!Main.canZoomIn)
+				
+				if(!Main.instance.canZoomIn)
 				{
-					Main.canZoomIn=true;
+					trace("entro")
+					Main.instance.canZoomIn=true;
 				}
+				
+				
 			}
 			
 		}

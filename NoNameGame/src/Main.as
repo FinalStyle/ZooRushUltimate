@@ -37,7 +37,8 @@ package
 		public var playersLocalPositions:Vector.<Point>;
 		public var playersGlobalPositionNearestToEdges:Vector.<Point>;
 		public var playersLocalPositionNearestToEdges:Vector.<Point>;
-		public static var canZoomIn:Boolean=true;
+		public var canZoomIn:Boolean=true;
+		public var canZoomOut:Boolean=true;
 		public var cam:Camera;
 		public var sideLimitsX:Number;
 		public var pause:Pause=new Pause;
@@ -58,7 +59,7 @@ package
 		public var aceptarsounds:Sound;
 		public var jumpsound:Sound;
 		public var bool:Boolean;
-	
+		
 		
 		
 		
@@ -214,7 +215,7 @@ package
 						audioselection = new SoundController(aceptarsounds);
 						audioselection.play(0);
 						audioselection.volume=0.4;
-					
+						
 					}
 					else if (w==true&&Locator.mainStage.contains(menu2))
 					{
@@ -318,8 +319,11 @@ package
 		
 		protected function zoomOut():void
 		{
+			if(canZoomOut)
+			{
 			canZoomIn=false;
 			cam.smoothZoom = cam.zoom / 1.3;
+			}
 			
 		}		
 		///////////////////////////////////////////////////////////////////////////////
@@ -506,9 +510,7 @@ package
 				tempPGlobal = allPlayers[i].model.parent.localToGlobal(tempPLocal);
 				playersLocalPositions[i]=tempPLocal;
 				playersGlobalPositions[i]=tempPGlobal;
-				//trace("Local", playersLocalPositions[i], "Global", playersGlobalPositions[i])
 			}
-			
 		}
 		
 		public function checkCamera():void
@@ -523,58 +525,27 @@ package
 			{
 				zoomOut()
 			}
-			if(playersGlobalPositionNearestToEdges[0].x>sideLimitsX+150 && playersGlobalPositionNearestToEdges[1].x<stage.stageWidth-sideLimitsX-150)
+			else if(playersGlobalPositionNearestToEdges[0].y<100)
+			{
+				zoomOut()
+			}
+			else if(playersGlobalPositionNearestToEdges[1].y>stage.stageHeight-100)
+			{
+				zoomOut()
+			}
+			if(playersGlobalPositionNearestToEdges[0].x>300 && 
+				playersGlobalPositionNearestToEdges[1].x<stage.stageWidth-300 &&
+				playersGlobalPositionNearestToEdges[0].y>300 &&
+				playersGlobalPositionNearestToEdges[1].y<stage.stageHeight-300)
 			{
 				zoomIn()
 			}
-			
-			camLookAt.x=mid2Players.x
-			camLookAt.y=mid2Players.y
-			
-			if(playersGlobalPositionNearestToEdges[0].y<50)
-			{
-				zoomOut()
-			}
-			else if(playersGlobalPositionNearestToEdges[1].y>stage.stageHeight-50)
-			{
-				zoomOut()
-			}
-			
-			/*if(camLookAt.x>mid2Players.x+10)
-			{
-			camLookAt.x-=5;
-			}
-			else if(camLookAt.x<mid2Players.x-10)
-			{
-			camLookAt.x+=5;
-			}
-			if(camLookAt.y>mid2Players.y+10)
-			{
-			camLookAt.y-=5;
-			}
-			else if(camLookAt.y<mid2Players.y-10)
-			{
-			camLookAt.y+=5;
-			}*/
-			/*
-			if(playersLastLocalsPositions[i].x<playersLocalPositions[i].x && allPlayers[i].model.x - allPlayers[aquienresto].model.x<0 && canZoom)
-			{
-			//trace("playerlastlocal- " + playersLastLocalsPositions[i].x, "currentlocal- ",  playersLocalPositions[i].x, " i: ", i);
-			zoomIn()
-			canZoom=true
-			}
-			else if(playersLastLocalsPositions[i].x>playersLocalPositions[i].x && allPlayers[i].model.x - allPlayers[aquienresto].model.x>0 && canZoom)
-			{
-			//trace("playerlastlocal- " + playersLastLocalsPositions[i].x, "currentlocal- ",  playersLocalPositions[i].x, " i: ", i);
-			zoomIn()
-			canZoom=true
-			}
-			}	*/
+			camLookAt.x=mid2Players.x;
+			camLookAt.y=mid2Players.y;
+			trace(canZoomIn);
 		}
-		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//****************************************** Colition Checks ***********************************************************//
-		
 		public function checkDeaths():void
 		{
 			for (var k:int = allPlayers.length-1; k >= 0; k--) 
@@ -583,9 +554,11 @@ package
 				{
 					allPlayers[k].destroy();
 					allPlayers.splice(k, 1);
-					trace("se murio viteh")
+					playersGlobalPositionNearestToEdges=new Vector.<Point>;
+					playersLocalPositionNearestToEdges=new Vector.<Point>;
+					playersGlobalPositions= new Vector.<Point>;
+					playersLocalPositions= new Vector.<Point>;
 				}
-				
 			}
 		}
 		public function checkPlayersColitions():void
@@ -606,7 +579,6 @@ package
 						}
 						allPlayers[k].isjumping=false;
 						allPlayers[k].model.MC_model.rotation=allPlayers[k].rotacionoriginal;
-						
 					}				
 				}
 				for (var j:int = 0; j < allWallsOfLevel1.length; j++) 
@@ -614,7 +586,6 @@ package
 					if(allPlayers[k].model.MC_sideHitBox.hitTestObject(allWallsOfLevel1[j]))
 					{
 						allPlayers[k].canmove=false;
-						
 					}
 				}
 			}
