@@ -87,6 +87,7 @@ package
 		
 		public function evMainMenu(event:Event):void
 		{
+			gamestarted=false;
 			selectionsound=Locator.assetsManager.getSound("soundchangeselection");
 			backsound=Locator.assetsManager.getSound("soundselectionatras");
 			aceptarsounds=Locator.assetsManager.getSound("soundselectionaceptar");

@@ -128,8 +128,11 @@ package
 			Locator.mainStage.addChild(black);
 			black.alpha=0.4;
 			Locator.mainStage.addChild(model);
+			model.scaleX=model.scaleY=0.5
 			model.x=x;
-			model.y=y;
+			model.y=y
+		
+	
 			Main.instance.pauseboolean=true;
 			model.MC_restart.alpha=0;
 			model.MC_exit.alpha=0;
