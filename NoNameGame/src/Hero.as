@@ -439,7 +439,7 @@ package
 		{
 			if(model.currentLabel!=name)
 			{
-				model.MC_model.gotoAndPlay(name)
+				model.gotoAndPlay(name)
 			}
 		}
 	}

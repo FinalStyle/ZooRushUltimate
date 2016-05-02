@@ -427,6 +427,16 @@ package
 				audioselection.volume=0.3;
 				bool=true
 				allPlayers[0].block=true;
+				if(allPlayers[0].arrowbool)
+				{
+					allPlayers[0].deleteArrowForThrowingGranade();
+				}
+				for (var i:int = 0; i < allPlayers[0].granades.length; i++) 
+				{
+					allPlayers[0].granades[i].destroy(level);
+					allPlayers[0].granades.splice(i, 1);
+				}
+				
 			}
 		}
 		public function GetNearestPlayerToCannon(cannon:MovieClip):Point 
@@ -634,14 +644,14 @@ package
 					if(allPlayers[k].model.MC_botHitBox.hitTestObject(allPlatformsOfLevel1[i])&&allPlayers[k].framecontador>=6&&allPlayers[k].fallSpeed>0)
 					{
 						allPlayers[k].fallSpeed=0;
-						allPlayers[k].model.y=allPlatformsOfLevel1[i].y-allPlatformsOfLevel1[i].height;
+						allPlayers[k].model.y=allPlatformsOfLevel1[i].y-allPlatformsOfLevel1[i].height+5;
 						allPlayers[k].JumpContador=0;
 						if (allPlayers[k].isjumping&&!allPlayers[k].block)
 						{
-							allPlayers[k].model.MC_model.gotoAndPlay("Idle");
+							allPlayers[k].changeAnimation(allPlayers[k].ANIM_IDLE);
 						}
 						allPlayers[k].isjumping=false;
-						allPlayers[k].model.MC_model.rotation=allPlayers[k].rotacionoriginal;
+						allPlayers[k].model.rotation=allPlayers[k].rotacionoriginal;
 					}				
 				}
 				for (var j:int = 0; j < allWallsOfLevel1.length; j++) 

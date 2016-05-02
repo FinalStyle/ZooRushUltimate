@@ -39,7 +39,7 @@ package Engine
 		public function loadLinks(url:String):void
 		{
 			Locator.mainStage.addChild(preload);
-			
+			preload.x=-50
 			
 			preload.mc_current.gotoAndStop(1);
 			preload.mc_global.gotoAndStop(1);
