@@ -65,7 +65,6 @@ package
 					}
 					else if(optionnumber==2)
 					{
-						
 						pausedoff()						
 						Main.instance.destroyall()
 						Main.instance.evStartGame(currentlevel)
@@ -82,6 +81,7 @@ package
 					Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
 					Main.instance.audioselection.play(0);
 					Main.instance.audioselection.volume=0.4;
+					Main.instance.gamestarted=false;
 				}
 					
 					break;
@@ -100,21 +100,11 @@ package
 			switch(e.keyCode)
 			{
 				case Keyboard.W:
-					
 					break;
-				
-				
 				case Keyboard.S:
-					
-					
 					break;
-				
-				
 				case Keyboard.ENTER:
-					
-					
 					break;
-				
 			}
 		}		
 		
