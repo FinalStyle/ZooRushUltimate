@@ -5,6 +5,8 @@ package
 	import Engine.Locator;
 	
 	import flash.display.MovieClip;
+	import flash.display.StageDisplayState;
+	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
@@ -68,7 +70,8 @@ package
 		
 		public function Main()
 		{
-			
+			mainStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
+			mainStage.scaleMode = StageScaleMode.EXACT_FIT;
 			instance = this;
 			
 			mainfunction();
