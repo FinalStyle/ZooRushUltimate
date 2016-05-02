@@ -23,7 +23,7 @@ package
 		
 		public var fallSpeed:int = 1;
 		public var grav:int = 1;
-		
+		public var granadebool:Boolean;
 		/** Necesito el nivel en el que estoy */ 
 		public var currentlvl:MovieClip;
 		//////////Teclas/////////
@@ -196,10 +196,12 @@ package
 		///////////////////////////////////////////Granade and Arrow Functions///////////////////////////////////////////////
 		public function throwGranade():void
 		{
+			
 			var granade:Granade;
 			granade = new Granade(model.x, model.y-10, currentlvl, pointingArrow.model.rotation, model.scaleX)
 			granades.push(granade);
 			throwingGranade=false;
+			
 		}
 		public function arrowForThrowingGranade():void
 		{
@@ -242,8 +244,9 @@ package
 			changeAnimation(ANIM_DMG);
 			damagecounter=framecontador;
 			damagecounter+=10
-			if (arrowbool==true)
+			if (!granadebool&&arrowbool==true)
 			{
+				granadebool==true
 				deleteArrowForThrowingGranade();
 				throwingGranade=false;
 				holding=false;
@@ -285,6 +288,7 @@ package
 		{
 			if (!block)
 			{
+				
 				if(!throwingGranade)
 				{
 					
@@ -400,11 +404,13 @@ package
 						arrowForThrowingGranade();
 						throwingGranade=true;
 					}
-					else if (Main.instance.pauseboolean==false&&!block)
+					else if (!granadebool&&Main.instance.pauseboolean==false&&!block)
 					{
+						granadebool=true
 						throwGranade();
 						deleteArrowForThrowingGranade();
 						holding=false;
+						
 					}
 					break;
 				}
@@ -445,6 +451,14 @@ package
 					}
 					break;
 				}
+					
+					case atk1Key:
+					{
+					
+							granadebool= false;
+							break;
+						
+					}
 			}
 		}
 		public function changeAnimation(name:String):void
