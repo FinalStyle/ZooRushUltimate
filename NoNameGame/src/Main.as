@@ -162,14 +162,13 @@ package
 					w=false;
 					break;
 				}
-					
 				case Keyboard.P:
 				{
 					if (gamestarted)
 					{
 						if (!pauseboolean)
 						{
-							pause.pauseon(camLookAt.x, camLookAt.y/2);
+							pause.pauseon(stage.stageWidth/2, stage.stageHeight/2);
 							
 						}
 						else if (pauseboolean)
@@ -335,15 +334,13 @@ package
 		///////////////////////////////////////////////////////////////////////////////
 		public function update(e:Event):void
 		{	
-			
+			cam.lookAt(camLookAt)
 			if (!pauseboolean)
 			{
 				for (var i:int = 0; i < allPlayers.length; i++) 
 				{
 					allPlayers[i].Update();
-					
 				}
-				cam.lookAt(camLookAt)
 				if(!gameEnded)
 				{
 					checkDeaths();
@@ -363,7 +360,7 @@ package
 				
 				if(allPlayers.length==1)
 				{
-					victorysound();
+					victorySet();
 					gameEnded=true;
 					if(camLookAt.x>allPlayers[0].model.x+5)
 					{
@@ -386,7 +383,7 @@ package
 				}
 			}
 		}
-		public function victorysound():void
+		public function victorySet():void
 		{
 			if (!bool)
 			{

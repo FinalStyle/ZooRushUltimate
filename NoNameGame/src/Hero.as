@@ -53,7 +53,6 @@ package
 		public var canJump:Boolean = true;
 		public var JumpContador:int=0
 		///////////////////////////Armas y ataques/////////////////////////////
-		public var bullet:Vector.<MovieClip> = new Vector.<MovieClip>();
 		public var granades:Vector.<Granade> = new Vector.<Granade>();
 		/** pointingArrow es una flecha que apunta hacia donde se lanza la granada */ 
 		public var pointingArrow:pointArrow;
@@ -83,35 +82,36 @@ package
 		}
 		public function Update():void
 		{
-			framecontador++;
-			if (block&&framecontador==damagecounter)
+			if(!Main.instance.gameEnded)
 			{
-				block=false;
-				changeAnimation(ANIM_IDLE);
-			}
-			checkKeys();
-			fall();
-			moveBullets();
-			for (var i:int = 0; i < granades.length; i++) 
-			{
-				granades[i].update();
-			}
-			uptdateGranadeCounters();
-			if(gotHitByGranade)
-			{				
-				flyByGranadeHit(directionToFlyByGranade, forceAppliedByGranade);
-				forceAppliedByGranade--;
-				if(forceAppliedByGranade<=5)
+				framecontador++;
+				if (block&&framecontador==damagecounter)
 				{
-					gotHitByGranade=false;
-					forceAppliedByGranade=20;
-					var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
-					
-					Main.instance.audioselection=new SoundController (explosionsound)
-					Main.instance.audioselection.play(0);
+					block=false;
+					changeAnimation(ANIM_IDLE);
+				}
+				checkKeys();
+				fall();
+				for (var i:int = 0; i < granades.length; i++) 
+				{
+					granades[i].update();
+				}
+				uptdateGranadeCounters();
+				if(gotHitByGranade)
+				{				
+					flyByGranadeHit(directionToFlyByGranade, forceAppliedByGranade);
+					forceAppliedByGranade--;
+					if(forceAppliedByGranade<=5)
+					{
+						gotHitByGranade=false;
+						forceAppliedByGranade=20;
+						var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
+						
+						Main.instance.audioselection=new SoundController (explosionsound)
+						Main.instance.audioselection.play(0);
+					}
 				}
 			}
-			
 		}
 		public function fall():void
 		{
@@ -134,30 +134,8 @@ package
 			}
 			
 		}
-		public function shoot():void
-		{
-			if (Main.instance.pauseboolean==false)
-			{
-				var bulletModel:MovieClip = Locator.assetsManager.getMovieClip("MCBullet");
-				Locator.mainStage.addChild(bulletModel);
-				bulletModel.x = model.x+20
-				bulletModel.y = model.y-model.height/2+bulletModel.height/2
-				bullet.push(bulletModel);
-			}
-			
-		}
-		public function moveBullets():void
-		{
-			for (var i:int = bullet.length-1; i >= 0; i--) 
-			{
-				bullet[i].x+=15
-			}
-			
-		}
 		public function spawn(PosX:int, PosY:int, parent:MovieClip):void
 		{
-			model = Locator.assetsManager.getMovieClip("MCPlayer");
-			//Locator.mainStage.addChild(model)
 			parent.addChild(model);
 			model.x=PosX;
 			model.y=PosY;
@@ -166,7 +144,8 @@ package
 			model.MC_botHitBox.alpha=0;
 			model.MC_HitBox.alpha=0;
 			model.MC_topHitBox.alpha=0;
-			rotacionoriginal=model.rotation
+			model.mc_forceApply.alpha=0;
+			rotacionoriginal=model.rotation;
 		}
 		public function move(direction:int):void
 		{
@@ -391,11 +370,6 @@ package
 					right=true;
 					break;
 				}
-				case shootKey:
-				{
-					shoot();
-					break;
-				}
 				case atk1Key:
 				{
 					if(!holding&&Main.instance.pauseboolean==false&&!block)
@@ -435,7 +409,7 @@ package
 				{
 					left=false;
 					moviendoce=false;
-					if (!isjumping)
+					if (!isjumping && !Main.instance.gameEnded)
 					{
 						changeAnimation(ANIM_IDLE);
 					}
@@ -445,20 +419,20 @@ package
 				{
 					right=false;
 					moviendoce=false;
-					if (!isjumping)
+					if (!isjumping && !Main.instance.gameEnded)
 					{
 						changeAnimation(ANIM_IDLE);
 					}
 					break;
 				}
 					
-					case atk1Key:
-					{
+				case atk1Key:
+				{
 					
-							granadebool= false;
-							break;
-						
-					}
+					granadebool= false;
+					break;
+					
+				}
 			}
 		}
 		public function changeAnimation(name:String):void
