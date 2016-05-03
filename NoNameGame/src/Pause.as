@@ -160,11 +160,14 @@ package
 		
 		public function pausedoff():void
 		{
+			optionnumber=1;
+	
 			Locator.mainStage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 			Locator.mainStage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
 			Locator.mainStage.removeChild(black);
 			Locator.mainStage.removeChild(model);
 			Main.instance.pauseboolean=false;
+			
 		}
 	}
 }

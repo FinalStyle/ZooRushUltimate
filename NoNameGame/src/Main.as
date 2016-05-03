@@ -85,6 +85,7 @@ package
 		
 		public function evMainMenu(event:Event):void
 		{
+			
 			gamestarted=false;
 			selectionsound=Locator.assetsManager.getSound("soundchangeselection");
 			backsound=Locator.assetsManager.getSound("soundselectionatras");
@@ -236,6 +237,7 @@ package
 		}
 		public function evStartGame(level:String, playersCountForGame:int):void
 		{
+			bool=false;
 			playersCount = playersCountForGame;
 			var player:Hero;
 			var song:Sound=	Locator.assetsManager.getSound("song1");
@@ -409,6 +411,18 @@ package
 					else if(camLookAt.y<allPlayers[0].model.y-5)
 					{
 						camLookAt.y+=3;
+					}
+					else
+					{
+						if (!pauseboolean)
+						{
+							pause.pauseon(stage.stageWidth/2, stage.stageHeight/2);
+							
+						}
+						else if (pauseboolean)
+						{
+							pause.pausedoff();
+						}
 					}
 				}
 			}
