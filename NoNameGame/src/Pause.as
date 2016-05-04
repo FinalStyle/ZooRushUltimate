@@ -30,7 +30,7 @@ package
 			{
 				
 				
-				case Keyboard.W:
+				case Keyboard.UP:
 					
 					if (optionnumber>1)
 					{
@@ -43,7 +43,7 @@ package
 					break;
 				
 				
-				case Keyboard.S:
+				case Keyboard.DOWN:
 					
 					if (optionnumber<3)
 					{
@@ -56,7 +56,7 @@ package
 				
 				
 				case Keyboard.ENTER:
-					if (optionnumber==1)
+					if(optionnumber==1 && !Main.instance.gameEnded)
 					{
 						pausedoff()
 						Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
@@ -72,21 +72,19 @@ package
 						Main.instance.audioselection.play(0);
 						Main.instance.audioselection.volume=0.4;
 					}
-					else
-				{
-					pausedoff()
-					Main.instance.destroyall()
-					Locator.resetassets()
-					Main.instance.mainfunction();
-					Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
-					Main.instance.audioselection.play(0);
-					Main.instance.audioselection.volume=0.4;
-					Main.instance.gamestarted=false;
-				}
+					else if(optionnumber==3)
+					{
+						pausedoff()
+						Main.instance.destroyall()
+						Locator.resetassets()
+						Main.instance.mainfunction();
+						Main.instance.audioselection = new SoundController(Main.instance.aceptarsounds);
+						Main.instance.audioselection.play(0);
+						Main.instance.audioselection.volume=0.4;
+						Main.instance.gamestarted=false;
+					}
 					
 					break;
-				
-				
 			}
 			
 		}
@@ -121,8 +119,8 @@ package
 			model.scaleX=model.scaleY=0.5
 			model.x=x;
 			model.y=y
-		
-	
+			
+			
 			Main.instance.pauseboolean=true;
 			model.MC_restart.alpha=0;
 			model.MC_exit.alpha=0;
@@ -161,7 +159,7 @@ package
 		public function pausedoff():void
 		{
 			optionnumber=1;
-	
+			
 			Locator.mainStage.removeEventListener(KeyboardEvent.KEY_DOWN, keyDown);
 			Locator.mainStage.removeEventListener(KeyboardEvent.KEY_UP, keyUp);
 			Locator.mainStage.removeChild(black);

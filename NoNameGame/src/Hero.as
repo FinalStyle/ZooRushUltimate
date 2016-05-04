@@ -239,7 +239,7 @@ package
 				granades[i].destroy(currentlvl)
 				granades.splice(i, 1);
 			}
-			if(holding)
+			if(arrowbool)
 			{
 				pointingArrow.destroy(currentlvl);
 			}

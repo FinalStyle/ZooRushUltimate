@@ -27,19 +27,9 @@ package
 			}
 		}
 		public function update(posX:int, posY:int):void
-		{
-			/*if(model.rotation>=50)
-			{
-			direction = -1;
-			}
-			else if(model.rotation<=-50)
-			{
-			direction = 1;
-			}*/
-			
+		{			
 			model.x = posX;
 			model.y = posY;
-			/*model.rotation += speed * direction*/		
 		}
 		public function destroy(parent:MovieClip):void
 		{

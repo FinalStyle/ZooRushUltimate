@@ -13,6 +13,7 @@ package
 	import flash.geom.Point;
 	import flash.media.Sound;
 	import flash.ui.Keyboard;
+	import flash.ui.Mouse;
 	
 	[SWF(height="720", width="1280", frameRate="60")]
 	public class Main extends Locator
@@ -47,11 +48,12 @@ package
 		public var fixCamera:Boolean;
 		public var fixCameraTimer:Number;
 		/////////////////////////////////////////Menu//////////////////////////////////////////////////
-		public var w:Boolean;
-		public var s:Boolean;
+		public var menuUp:Boolean;
+		public var menuDown:Boolean;
 		public var menu1:MovieClip;
 		public var menu2:MovieClip;
 		public var creditos:MovieClip;
+		public var howToPlay:MovieClip;
 		/////////////////////////////////////////Audio//////////////////////////////////////////////////
 		public var audio:SoundController;
 		public var audioselection:SoundController;
@@ -71,7 +73,8 @@ package
 			mainStage.displayState = StageDisplayState.FULL_SCREEN_INTERACTIVE;
 			mainStage.scaleMode = StageScaleMode.EXACT_FIT;
 			instance = this;
-			
+			mouseEnabled=false;
+			Mouse.hide()
 			mainfunction();
 			
 		}
@@ -94,13 +97,18 @@ package
 			menu1=Locator.assetsManager.getMovieClip("MC_Menu1");
 			menu2=Locator.assetsManager.getMovieClip("MC_Menu2");
 			creditos=Locator.assetsManager.getMovieClip("MC_Creditos");
+			howToPlay=Locator.assetsManager.getMovieClip("MC_howToPlay");
+			howToPlay.scaleX=0.5;
+			howToPlay.scaleY=0.5;
+			creditos.scaleX=0.5;
+			creditos.scaleY=0.5;
 			menu1.scaleX=0.5;
 			menu1.scaleY=0.5;
 			menu2.scaleX=0.5;
 			menu2.scaleY=0.5;
 			Locator.mainStage.addChild(menu1)
 			menu1.MC_creditos.alpha=0
-			w=true;
+			menuUp=true;
 			Locator.mainStage.addEventListener(KeyboardEvent.KEY_DOWN, keyDown)
 			
 			
@@ -113,7 +121,7 @@ package
 		{
 			switch(e.keyCode)
 			{
-				case Keyboard.W:
+				case Keyboard.UP:
 				{
 					if (Locator.mainStage.contains(menu1))
 					{
@@ -133,11 +141,11 @@ package
 						audioselection.play(0);
 						audioselection.volume=0.3;
 					}
-					w=true;
-					s=false;
+					menuUp=true;
+					menuDown=false;
 					break;
 				}
-				case Keyboard.S:
+				case Keyboard.DOWN:
 				{
 					if (Locator.mainStage.contains(menu1))
 					{
@@ -157,8 +165,8 @@ package
 						audioselection.play(0);
 						audioselection.volume=0.3;
 					}
-					s=true;
-					w=false;
+					menuDown=true;
+					menuUp=false;
 					break;
 				}
 				case Keyboard.P:
@@ -179,20 +187,20 @@ package
 				}
 				case Keyboard.ENTER:
 				{
-					if (w==true&&Locator.mainStage.contains(menu1))
+					if (menuUp==true&&Locator.mainStage.contains(menu1))
 					{
 						Locator.mainStage.removeChild(menu1);
 						Locator.mainStage.addChild(menu2);
 						menu2.MC_level1.alpha=1;
 						menu2.MC_level2.alpha=0;
-						w=true;
+						menuUp=true;
 						audioselection = new SoundController(aceptarsounds);
 						audioselection.play(0);
 						audioselection.volume=0.4;
 						
 						
 					}
-					else if (w==false&&Locator.mainStage.contains(menu1))
+					else if (menuUp==false&&Locator.mainStage.contains(menu1))
 					{
 						Locator.mainStage.removeChild(menu1);
 						Locator.mainStage.addChild(creditos);
@@ -206,12 +214,12 @@ package
 						Locator.mainStage.addChild(menu1);
 						menu1.MC_jugar.alpha=1;
 						menu1.MC_creditos.alpha=0;
-						w=true;
+						menuUp=true;
 						audioselection = new SoundController(aceptarsounds);
 						audioselection.play(0);
 						audioselection.volume=0.4;
 					}
-					else if (w==false&&Locator.mainStage.contains(menu2))
+					else if (menuUp==false&&Locator.mainStage.contains(menu2))
 					{
 						Locator.mainStage.removeChild(menu2);
 						evStartGame("MCLevel2", 4);
@@ -221,7 +229,7 @@ package
 						audioselection.volume=0.4;
 						
 					}
-					else if (w==true&&Locator.mainStage.contains(menu2))
+					else if (menuUp==true&&Locator.mainStage.contains(menu2))
 					{
 						Locator.mainStage.removeChild(menu2);
 						evStartGame("MCLevel1", 2);
@@ -230,7 +238,18 @@ package
 						audioselection.play(0);
 						audioselection.volume=0.4;
 					}
-					
+					break;
+				}
+				case Keyboard.H:
+				{
+					if(Locator.mainStage.contains(menu1) && !Locator.mainStage.contains(howToPlay))
+					{
+						Locator.mainStage.addChild(howToPlay);
+					}
+					else if(Locator.mainStage.contains(menu1) && Locator.mainStage.contains(howToPlay))
+					{
+						Locator.mainStage.removeChild(howToPlay);
+					}
 				}
 			}
 			
@@ -247,7 +266,6 @@ package
 			pause.getlevel(level);
 			allPlatformsOfLevel1 = new Array();
 			allWallsOfLevel1= new Array();
-			
 			allPlayers= new Vector.<Hero>;
 			
 			//////////////////////////////////////CameraSet////////////////////////////////////////////
@@ -394,36 +412,33 @@ package
 				{
 					victorySet();
 					gameEnded=true;
-					if(camLookAt.x>allPlayers[0].model.x+5)
+					if(camLookAt.x>allPlayers[0].model.x+10)
 					{
-						camLookAt.x-=3;
+						camLookAt.x-=8;
 						zoomIn();
 					}
-					else if(camLookAt.x<allPlayers[0].model.x-5)
+					else if(camLookAt.x<allPlayers[0].model.x-10)
 					{
-						camLookAt.x+=3;
+						camLookAt.x+=8;
 						zoomIn();
-					}
-					if(camLookAt.y>allPlayers[0].model.y+5)
-					{
-						camLookAt.y-=3;
-					}
-					else if(camLookAt.y<allPlayers[0].model.y-5)
-					{
-						camLookAt.y+=3;
 					}
 					else
 					{
 						if (!pauseboolean)
 						{
 							pause.pauseon(stage.stageWidth/2, stage.stageHeight/2);
-							
-						}
-						else if (pauseboolean)
-						{
-							pause.pausedoff();
 						}
 					}
+					
+					if(camLookAt.y>allPlayers[0].model.y+10)
+					{
+						camLookAt.y-=8;
+					}
+					else if(camLookAt.y<allPlayers[0].model.y-10)
+					{
+						camLookAt.y+=8;
+					}
+					
 				}
 			}
 		}
@@ -445,11 +460,12 @@ package
 				{
 					allPlayers[0].deleteArrowForThrowingGranade();
 				}
-				for (var i:int = 0; i < allPlayers[0].granades.length; i++) 
+				for (var i:int = allPlayers[0].granades.length-1; i >= 0; i--) 
 				{
 					allPlayers[0].granades[i].destroy(level);
 					allPlayers[0].granades.splice(i, 1);
 				}
+				
 				
 			}
 		}
@@ -711,14 +727,10 @@ package
 					{
 						if(allPlayers[j].granades[i].model.MC_botHitBox.hitTestObject(allPlatformsOfLevel1[l]) && allPlayers[j].granades[i].fallSpeed>10)
 						{
-							trace(allPlayers[j].granades[i].fallSpeed)
 							allPlayers[j].granades[i].fallen=true;
 							allPlayers[j].granades[i].model.y=allPlatformsOfLevel1[l].y-allPlatformsOfLevel1[l].height;
 							allPlayers[j].granades[i].fallSpeed=allPlayers[j].granades[i].fallSpeed/-2;
 							allPlayers[j].granades[i].speed=allPlayers[j].granades[i].speed/1.5;
-							trace("colisiona")
-							
-							
 						}      
 					}
 					for (var k:int= allPlayers.length-1; k >= 0; k--) 
