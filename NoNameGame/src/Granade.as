@@ -11,6 +11,8 @@ package
 	
 	public class Granade
 	{
+		public var canDelete:Boolean;
+		
 		public var model:MovieClip;
 		public var explosion:MovieClip;
 		public var speed:Number = 30;
@@ -30,7 +32,10 @@ package
 		
 		public var fallen:Boolean=false;
 		
-		public var thisparent:MovieClip
+		
+		public var exploded:Boolean=false;
+		
+		
 		public function Granade(posX:Number, posY:Number, parent:MovieClip, rotation:Number, scaleX:int)
 		{
 			model = Locator.assetsManager.getMovieClip("MCGranade");
@@ -45,8 +50,8 @@ package
 			model.MC_botHitBox.alpha=0;
 			model.MC_topHitBox.alpha=0;
 			
-			var lanzamientosound:Sound=Locator.assetsManager.getSound("bombalanzamiento")
 			
+			var lanzamientosound:Sound=Locator.assetsManager.getSound("bombalanzamiento")
 			Main.instance.audioselection=new SoundController (lanzamientosound)
 			Main.instance.audioselection.play(0);
 		}
@@ -54,6 +59,7 @@ package
 		{
 			model.y+=fallSpeed;
 			fallSpeed+=grav;
+			
 		}
 		public function update():void
 		{
@@ -72,20 +78,35 @@ package
 			{
 				force=0;
 			}
-			
 		}
 		public function destroy(parent:MovieClip):void
 		{
-			model.addChild(explosion);
-			explosion.gotoAndPlay(0)
-			model.addEventListener(Event.ENTER_FRAME, updateExplosion);
 			parent.removeChild(model);
 		}
-		
+		public function explode():void
+		{
+			if(!exploded)
+			{
+				var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
+				Main.instance.audioselection=new SoundController (explosionsound);
+				Main.instance.audioselection.play(0);
+				Main.instance.level.addChild(explosion);
+				explosion.x=model.x;
+				explosion.y=model.y;
+				destroy(Main.instance.level);
+				exploded=true;
+				model.addEventListener(Event.ENTER_FRAME, updateExplosion);
+			}
+			
+		}
 		protected function updateExplosion(event:Event):void
 		{
-			
-				
+			if(explosion.currentFrame==20)
+			{
+				Main.instance.level.removeChild(explosion);
+				canDelete=true;
+				model.removeEventListener(Event.ENTER_FRAME, updateExplosion);
+			}
 		}
 		
 	}

@@ -105,10 +105,6 @@ package
 					{
 						gotHitByGranade=false;
 						forceAppliedByGranade=20;
-						var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
-						
-						Main.instance.audioselection=new SoundController (explosionsound)
-						Main.instance.audioselection.play(0);
 					}
 				}
 			}
@@ -123,14 +119,14 @@ package
 				
 				
 			}
-			else if(fallSpeed<0&&!block)
-			{
-				changeAnimation(ANIM_JUMPIDLE);			
-				
-			}
 			else
 			{
 				fallSpeed=5;
+			}
+			if(fallSpeed>10&&!block)
+			{
+				changeAnimation(ANIM_JUMPIDLE);			
+				
 			}
 			
 		}
@@ -187,6 +183,7 @@ package
 			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl,model.scaleX);
 			currentlvl.addEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
 			arrowbool=true;
+			changeAnimation(ANIM_IDLE);
 			
 		}		
 		public function deleteArrowForThrowingGranade():void
@@ -205,13 +202,14 @@ package
 			for (var i:int = granades.length-1; i >= 0; i--) 
 			{
 				granades[i].currentTimeToExplode-=1000/60;
-				if (granades[i].currentTimeToExplode<=0) 
+				if(granades[i].canDelete)
 				{
-					var explosionsound:Sound=Locator.assetsManager.getSound("explosion")
-					granades[i].destroy(currentlvl);
-					granades.splice(i, 1);
-					Main.instance.audioselection=new SoundController (explosionsound)
-					Main.instance.audioselection.play(0);
+					granades.splice(i,1)
+				}
+				else if (granades[i].currentTimeToExplode<=0 && !granades[i].exploded) 
+				{
+					trace("entro")
+					granades[i].explode();
 				}
 			}
 		}
@@ -277,7 +275,14 @@ package
 						fallSpeed=-18;
 						canJump = false;
 						JumpContador++;
-						changeAnimation(ANIM_JUMPSTART);
+						if(JumpContador==0)
+						{
+							changeAnimation(ANIM_JUMPSTART);
+						}
+						if(JumpContador==1)
+						{
+							changeAnimation(ANIM_JUMPIDLE);
+						}
 						isjumping=true;
 						Main.instance.audioselection = new SoundController(Main.instance.jumpsound);
 						

@@ -71,7 +71,6 @@ package
 				
 				if(!Main.instance.canZoomIn)
 				{
-					trace("entro")
 					Main.instance.canZoomIn=true;
 				}
 				

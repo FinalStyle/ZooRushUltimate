@@ -673,13 +673,14 @@ package
 				{
 					if(allPlayers[k].model.MC_botHitBox.hitTestObject(allPlatformsOfLevel1[i])&&allPlayers[k].framecontador>=6&&allPlayers[k].fallSpeed>0)
 					{
-						allPlayers[k].fallSpeed=0;
-						allPlayers[k].model.y=allPlatformsOfLevel1[i].y-allPlatformsOfLevel1[i].height+5;
-						allPlayers[k].JumpContador=0;
-						if (allPlayers[k].isjumping&&!allPlayers[k].block)
+						if (allPlayers[k].isjumping&&!allPlayers[k].block ||allPlayers[k].fallSpeed>8)
 						{
 							allPlayers[k].changeAnimation(allPlayers[k].ANIM_IDLE);
 						}
+						allPlayers[k].fallSpeed=0;
+						allPlayers[k].model.y=allPlatformsOfLevel1[i].y-allPlatformsOfLevel1[i].height+5;
+						allPlayers[k].JumpContador=0;
+						
 						allPlayers[k].isjumping=false;
 						allPlayers[k].model.rotation=allPlayers[k].rotacionoriginal;
 					}				
@@ -750,8 +751,8 @@ package
 							direction.y = Math.sin(radians);
 							allPlayers[k].gotHitByGranade=true;
 							allPlayers[k].directionToFlyByGranade=direction;
-							allPlayers[j].granades[i].destroy(level);
-							allPlayers[j].granades.splice(i, 1);
+							allPlayers[j].granades[i].explode();
+							
 							break;
 						}    
 					}
@@ -779,7 +780,6 @@ package
 			cam.off();
 			cam=new Camera
 			Locator.mainStage.removeEventListener(Event.ENTER_FRAME, update)
-			//Locator.mainStage.removeEventListener(MouseEvent.CLICK, offCamera);
 			audio.stop();
 		}
 	}
