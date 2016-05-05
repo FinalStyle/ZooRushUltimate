@@ -10,6 +10,8 @@ package
 	import flash.events.Event;
 	import flash.events.KeyboardEvent;
 	import flash.events.MouseEvent;
+	import flash.filters.GlowFilter;
+	import flash.geom.ColorTransform;
 	import flash.geom.Point;
 	import flash.media.Sound;
 	import flash.ui.Keyboard;
@@ -299,17 +301,24 @@ package
 			
 			allPlatformsToArrayLevel1();
 			allWallsToArrayLevel1();
-			
+			var gfilter:GlowFilter = new GlowFilter;
 			for (var j:int = 0; j < playersCount; j++) 
 			{
 				if(j==0)
 				{
+					gfilter..color=0xff0000
 					player = new RedPanda(Keyboard.W, Keyboard.S, Keyboard.D, Keyboard.A,Keyboard.SPACE, Keyboard.Q);
+					player.model.filters = [gfilter]
+						
 					allPlayers.push(player);
 				}
 				else if(j==1)
 				{
 					player = new RedPanda(Keyboard.UP, Keyboard.DOWN, Keyboard.RIGHT, Keyboard.LEFT, Keyboard.COMMA, Keyboard.M);
+					//player.model.transform.colorTransform = new ColorTransform(0,0,115,1)
+					gfilter= new GlowFilter;
+					gfilter.color=0x0000ff
+					player.model.filters = [gfilter]
 					allPlayers.push(player);
 				}
 				else if(j==2)
