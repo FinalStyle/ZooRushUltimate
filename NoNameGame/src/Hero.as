@@ -65,7 +65,6 @@ package
 		public var gotHitByGranade:Boolean=false;
 		public var directionToFlyByGranade:Point = new Point;
 		public var forceAppliedByGranade:int = 20;
-		public var rotacionoriginal:int;
 		public var arrowbool:Boolean=false;
 		
 		public function Hero(up:int, down:int, right:int, left:int, shoot:int, atk1:int)
@@ -141,14 +140,13 @@ package
 			model.MC_HitBox.alpha=0;
 			model.MC_topHitBox.alpha=0;
 			model.mc_forceApply.alpha=0;
-			rotacionoriginal=model.rotation;
 		}
 		public function move(direction:int):void
 		{
 			if(canmove)
 			{
 				
-				if(!moviendoce&&!isjumping)
+				if(!isjumping)
 				{
 					changeAnimation(ANIM_RUN);
 				}
@@ -158,13 +156,6 @@ package
 			}
 			model.scaleX=1*direction;
 			canmove=true;
-			if (runtrigger!=isjumping&&isjumping==false)
-			{
-				
-				changeAnimation(ANIM_RUN);
-				
-				
-			}
 			runtrigger=isjumping;
 		}
 		/////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -232,7 +223,7 @@ package
 		///////////////////////////////////////////////////////////////////////////////////////////////////////
 		public function destroy():void
 		{
-			for (var i:int = 0; i < granades.length; i++) 
+			for (var i:int = granades.length-1; i >=0; i--) 
 			{
 				granades[i].destroy(currentlvl)
 				granades.splice(i, 1);

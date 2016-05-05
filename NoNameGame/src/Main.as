@@ -354,14 +354,8 @@ package
 			
 			gameEnded=false;
 			Locator.mainStage.addEventListener(Event.ENTER_FRAME, update)
-			//Locator.mainStage.addEventListener(MouseEvent.CLICK, offCamera);
 			
 		}
-		
-		/*protected function offCamera(event:MouseEvent):void
-		{
-		zoomIn();
-		}*/
 		//////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////Zoom////////////////////////////////////////
 		protected function zoomIn():void
@@ -682,7 +676,6 @@ package
 						allPlayers[k].JumpContador=0;
 						
 						allPlayers[k].isjumping=false;
-						allPlayers[k].model.rotation=allPlayers[k].rotacionoriginal;
 					}				
 				}
 				for (var j:int = 0; j < allWallsOfLevel1.length; j++) 
