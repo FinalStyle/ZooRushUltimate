@@ -6,6 +6,7 @@ package
 	
 	import flash.display.MovieClip;
 	import flash.events.Event;
+	import flash.filters.GlowFilter;
 	import flash.geom.Point;
 	import flash.media.Sound;
 	
@@ -38,7 +39,9 @@ package
 		
 		public function Granade(posX:Number, posY:Number, parent:MovieClip, rotation:Number, scaleX:int)
 		{
+			var gfilter:GlowFilter = new GlowFilter;
 			model = Locator.assetsManager.getMovieClip("MCGranade");
+			model.filters =[gfilter]
 			explosion = Locator.assetsManager.getMovieClip("MC_Explosion");
 			parent.addChild(model);
 			model.x=posX;

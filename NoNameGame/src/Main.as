@@ -260,7 +260,6 @@ package
 		{
 			bool=false;
 			playersCount = playersCountForGame;
-			var player:Hero;
 			var song:Sound=	Locator.assetsManager.getSound("song1");
 			audio = new SoundController(song);
 			audio.play(11)
@@ -297,19 +296,36 @@ package
 			deadline.alpha=0;
 			
 			cam.addToView(this.level);
-			cam.lookAt(camLookAt)
+			cam.lookAt(camLookAt);
 			
 			allPlatformsToArrayLevel1();
 			allWallsToArrayLevel1();
+			addPlayers(playersCount);
+			
+			playersGlobalPositionNearestToEdges= new Vector.<Point>;
+			playersLocalPositionNearestToEdges= new Vector.<Point>;
+			
+			gameEnded=false;
+			Locator.mainStage.addEventListener(Event.ENTER_FRAME, update)
+			
+		}
+		
+		public function addPlayers(numberOfPlayers:int):void
+		{
+			
+			var player:Hero;
 			var gfilter:GlowFilter = new GlowFilter;
+			gfilter.strength=5
 			for (var j:int = 0; j < playersCount; j++) 
 			{
 				if(j==0)
 				{
-					gfilter..color=0xff0000
+					gfilter..color=0xff0000;
+					gfilter.strength=2;
+					gfilter.quality=15;
 					player = new RedPanda(Keyboard.W, Keyboard.S, Keyboard.D, Keyboard.A,Keyboard.SPACE, Keyboard.Q);
 					player.model.filters = [gfilter]
-						
+					
 					allPlayers.push(player);
 				}
 				else if(j==1)
@@ -318,6 +334,9 @@ package
 					//player.model.transform.colorTransform = new ColorTransform(0,0,115,1)
 					gfilter= new GlowFilter;
 					gfilter.color=0x0000ff
+					gfilter.strength=5
+					gfilter.strength=2;
+					gfilter.quality=15;
 					player.model.filters = [gfilter]
 					allPlayers.push(player);
 				}
@@ -357,36 +376,32 @@ package
 				}
 				getPlayerPositionFromLocalToGlobal(allPlayers[i]);
 			}
-			
-			playersGlobalPositionNearestToEdges= new Vector.<Point>;
-			playersLocalPositionNearestToEdges= new Vector.<Point>;
-			
-			gameEnded=false;
-			Locator.mainStage.addEventListener(Event.ENTER_FRAME, update)
-			
 		}
 		//////////////////////////////////////////////////////////////////////////////
 		//////////////////////////////////Zoom////////////////////////////////////////
 		protected function zoomIn():void
 		{
-			if(canZoomIn)
+			if(canZoomIn && cam.zoom<=1.4)
 			{
 				cam.smoothZoom = cam.zoom * 1.1;
+				sideLimitsX=100;
 			}
 		}
 		
 		protected function zoomOut():void
 		{
-			if(canZoomOut)
+			if(canZoomOut && cam.zoom>=0.3)
 			{
 				canZoomIn=false;
 				cam.smoothZoom = cam.zoom / 1.3;
+				sideLimitsX--
 			}
 			
 		}		
 		///////////////////////////////////////////////////////////////////////////////
 		public function update(e:Event):void
 		{	
+			//trace(cam.zoom, canZoomIn)
 			cam.lookAt(camLookAt)
 			if (!pauseboolean)
 			{
@@ -404,10 +419,7 @@ package
 					checkCamera();
 					///////////////////////////Collitions//////////////////////////////
 					granadeCollitions()
-					if(cam.zoom>=1.4 || cam.zoom<=0.3)
-					{
-						canZoomIn=false
-					}
+				
 				}
 				checkPlayersColitions();
 				
@@ -441,7 +453,6 @@ package
 					{
 						camLookAt.y+=8;
 					}
-					
 				}
 			}
 		}
@@ -472,45 +483,11 @@ package
 				
 			}
 		}
-		public function GetNearestPlayerToCannon(cannon:MovieClip):Point 
-		{
-			var pLocal:Point = new Point(0, 0);
-			var pGlobal:Point;
-			pLocal= new Point(cannon.x, cannon.y);
-			pGlobal = cannon.parent.localToGlobal(pLocal);
-			var nearestLeftPosition:Point = new Point(-10000);
-			var nearestRightPosition:Point = new Point (10000);
-			var nearestPlayerPosition:Point = new Point;
-			
-			for (var j:int = 0; j < playersLocalPositions.length; j++) 
-			{
-				if(playersLocalPositions[j].x<=pLocal.x && playersLocalPositions[j].x>nearestLeftPosition.x)
-				{
-					nearestLeftPosition.x=playersLocalPositions[j].x;
-					nearestLeftPosition.y=playersLocalPositions[j].y;
-				}
-				if(playersLocalPositions[j].x>=pLocal.x && playersLocalPositions[j].x<nearestRightPosition.x)
-				{
-					nearestRightPosition.x=playersLocalPositions[j].x;
-					nearestRightPosition.y=playersLocalPositions[j].y;
-				}
-			}
-			if(pLocal.x - nearestLeftPosition.x < nearestRightPosition.x - pLocal.x)
-			{
-				nearestPlayerPosition = nearestLeftPosition
-			}
-			if(pLocal.x - nearestLeftPosition.x > nearestRightPosition.x - pLocal.x)
-			{
-				nearestPlayerPosition = nearestRightPosition
-			}
-			return nearestPlayerPosition;
-		}
 		
 		public function GetNearestPlayersToSidesLocal():void 
 		{
 			var lowestValues:Point = new Point(10000, 10000);
-			var highestValues:Point = new Point;
-			
+			var highestValues:Point = new Point(-10000, -10000);
 			var tempPlayer:Vector.<Point> = new Vector.<Point>();
 			var tempPlayerY:Vector.<Point> = new Vector.<Point>();
 			for (var i:int = 0; i < playersLocalPositions.length; i++) 
@@ -539,8 +516,7 @@ package
 		public function GetNearestPlayersToSides():void 
 		{
 			var lowestValues:Point = new Point(10000, 10000);
-			var highestValues:Point = new Point;
-			
+			var highestValues:Point = new Point(-10000, -10000);
 			var tempPlayer:Vector.<Point> = new Vector.<Point>();
 			var tempPlayerY:Vector.<Point> = new Vector.<Point>();
 			for (var i:int = 0; i < playersLocalPositions.length; i++) 
@@ -592,7 +568,6 @@ package
 		
 		public function checkCamera():void
 		{
-			
 			mid2Players.x = (playersLocalPositionNearestToEdges[0].x + playersLocalPositionNearestToEdges[1].x)/2;
 			mid2Players.y = (playersLocalPositionNearestToEdges[0].y + playersLocalPositionNearestToEdges[1].y)/2;
 			if(playersGlobalPositionNearestToEdges[0].x<sideLimitsX)
@@ -611,15 +586,16 @@ package
 			{
 				zoomOut()
 			}
-			if(playersGlobalPositionNearestToEdges[0].x>300 && 
-				playersGlobalPositionNearestToEdges[1].x<stage.stageWidth-300 &&
-				playersGlobalPositionNearestToEdges[0].y>300 &&
-				playersGlobalPositionNearestToEdges[1].y<stage.stageHeight-300)
+			if(playersGlobalPositionNearestToEdges[0].x>200 && 
+				playersGlobalPositionNearestToEdges[1].x<stage.stageWidth-200 &&
+				playersGlobalPositionNearestToEdges[0].y>150 && 
+				playersGlobalPositionNearestToEdges[1].y<stage.stageHeight-150)
 			{
 				zoomIn()
 			}
 			if(!fixCamera)
 			{
+				trace(playersLocalPositionNearestToEdges[0].x , playersLocalPositionNearestToEdges[1].x , mid2Players.x);
 				camLookAt.x=mid2Players.x;
 				camLookAt.y=mid2Players.y;
 			}

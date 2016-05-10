@@ -64,7 +64,7 @@ package
 		{
 			zoom += (currentTarget - zoom) / delayZoom;
 			
-			if(Math.abs( (currentTarget - zoom) ) < 0.002)
+			if(Math.abs( (currentTarget - zoom) ) < 0.0002)
 			{
 				zoom = currentTarget;
 				Locator.mainStage.removeEventListener(Event.ENTER_FRAME, evRefreshCameraZoom);
