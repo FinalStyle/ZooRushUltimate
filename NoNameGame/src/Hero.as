@@ -174,6 +174,7 @@ package
 		}
 		public function arrowForThrowingGranade():void
 		{
+			blockeodeanimacion=true;
 			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl,model.scaleX);
 			currentlvl.addEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
 			arrowbool=true;
@@ -419,7 +420,7 @@ package
 				{
 					left=false;
 					moviendoce=false;
-					if (!isjumping && !Main.instance.gameEnded&&blockeodeanimacion)
+					if (!isjumping && !Main.instance.gameEnded&&!blockeodeanimacion)
 					{
 						changeAnimation(ANIM_IDLE);
 					}
@@ -429,7 +430,7 @@ package
 				{
 					right=false;
 					moviendoce=false;
-					if (!isjumping && !Main.instance.gameEnded&&blockeodeanimacion)
+					if (!isjumping && !Main.instance.gameEnded&&!blockeodeanimacion)
 					{
 						changeAnimation(ANIM_IDLE);
 					}
