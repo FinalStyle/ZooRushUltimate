@@ -15,6 +15,8 @@ package
 		public const ANIM_JUMPIDLE:String= "Jump_Idle";
 		public const ANIM_JUMPSTART:String= "Jump_Start";
 		public const ANIM_DMG:String= "Damage";
+		public const ANIM_SHOTIDLE:String= "Shot_Idle"
+		public const ANIM_SHOTANIM:String= "Shot_End";
 		
 		public var hp:int = 100;
 		public var model:MovieClip;
@@ -46,6 +48,7 @@ package
 		public var isjumping:Boolean=false;
 		public var runtrigger:Boolean;
 		public var block:Boolean=false;
+		public var blockeodeanimacion:Boolean=false;
 		/////////////////////////
 		/** Variable para controlar si puede moverse o no */
 		public var canmove:Boolean = true;
@@ -174,9 +177,18 @@ package
 			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl,model.scaleX);
 			currentlvl.addEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
 			arrowbool=true;
-			changeAnimation(ANIM_IDLE);
+			changeAnimation(ANIM_SHOTIDLE);
+			model.addEventListener("evento unlock", evdesblockeo)
+			
+			
 			
 		}		
+		
+		protected function evdesblockeo(event:Event):void
+		{
+			throwGranade();
+			blockeodeanimacion=false;
+		}
 		public function deleteArrowForThrowingGranade():void
 		{
 			currentlvl.removeEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
@@ -377,7 +389,9 @@ package
 					else if (!granadebool&&Main.instance.pauseboolean==false&&!block)
 					{
 						granadebool=true
-						throwGranade();
+						blockeodeanimacion=true;
+						changeAnimation(ANIM_SHOTANIM);
+						
 						deleteArrowForThrowingGranade();
 						holding=false;
 						
@@ -405,7 +419,7 @@ package
 				{
 					left=false;
 					moviendoce=false;
-					if (!isjumping && !Main.instance.gameEnded)
+					if (!isjumping && !Main.instance.gameEnded&&blockeodeanimacion)
 					{
 						changeAnimation(ANIM_IDLE);
 					}
@@ -415,7 +429,7 @@ package
 				{
 					right=false;
 					moviendoce=false;
-					if (!isjumping && !Main.instance.gameEnded)
+					if (!isjumping && !Main.instance.gameEnded&&blockeodeanimacion)
 					{
 						changeAnimation(ANIM_IDLE);
 					}
