@@ -178,7 +178,11 @@ package
 			pointingArrow = new pointArrow(model.x+10, model.y-model.height/2, currentlvl,model.scaleX);
 			currentlvl.addEventListener(Event.ENTER_FRAME, updateArrowForThrowingGranade);
 			arrowbool=true;
-			changeAnimation(ANIM_SHOTIDLE);
+			if (!isjumping)
+			{
+				changeAnimation(ANIM_SHOTIDLE);
+			}
+		
 			model.addEventListener("evento unlock", evdesblockeo)
 			
 			
