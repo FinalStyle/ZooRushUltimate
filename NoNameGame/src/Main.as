@@ -27,6 +27,7 @@ package
 		public var gameEnded:Boolean = false;
 		
 		public var allPlatformsOfLevel1:Array;
+		public var allplatformsbase:Array;
 		public var allWallsOfLevel1:Array;
 		public var deadline:MovieClip;
 		
@@ -266,6 +267,7 @@ package
 			audio.volume=0.2;
 			pause.getlevel(level);
 			allPlatformsOfLevel1 = new Array();
+			allplatformsbase = new Array();
 			allWallsOfLevel1= new Array();
 			allPlayers= new Vector.<Hero>;
 			
@@ -663,6 +665,21 @@ package
 						allPlayers[k].isjumping=false;
 					}				
 				}
+				for (var c:int = 0; c < allplatformsbase.length; c++) 
+				{
+					if(allPlayers[k].model.MC_botHitBox.hitTestObject(allplatformsbase[c])&&allPlayers[k].fallSpeed>0)
+					{
+						if (allPlayers[k].isjumping&&!allPlayers[k].block ||allPlayers[k].fallSpeed>8)
+						{
+							allPlayers[k].changeAnimation(allPlayers[k].ANIM_IDLE);
+						}
+						allPlayers[k].fallSpeed=0;
+						allPlayers[k].model.y=allplatformsbase[c].y-allplatformsbase[c].height+5;
+						allPlayers[k].JumpContador=0;
+						
+						allPlayers[k].isjumping=false;
+					}				
+				}
 				for (var j:int = 0; j < allWallsOfLevel1.length; j++) 
 				{
 					if(allPlayers[k].model.MC_sideHitBox.hitTestObject(allWallsOfLevel1[j]))
@@ -681,6 +698,12 @@ package
 					allPlatformsOfLevel1.push(level.getChildAt(i));
 					level.getChildAt(i).alpha=0;
 					
+				}
+				else if (level.getChildAt(i).name=="mc_platformbase")
+				{
+					
+					allplatformsbase.push(level.getChildAt(i));
+					level.getChildAt(i).alpha=0; 
 				}
 			}
 		}
@@ -708,6 +731,18 @@ package
 						{
 							allPlayers[j].granades[i].fallen=true;
 							allPlayers[j].granades[i].model.y=allPlatformsOfLevel1[l].y-allPlatformsOfLevel1[l].height;
+							allPlayers[j].granades[i].fallSpeed=allPlayers[j].granades[i].fallSpeed/-2;
+							allPlayers[j].granades[i].speed=allPlayers[j].granades[i].speed/1.5;
+						}      
+					}
+					
+					allplatformsbase
+					for (var c:int = 0; c < allplatformsbase.length; c++) 
+					{
+						if(allPlayers[j].granades[i].model.MC_botHitBox.hitTestObject(allplatformsbase[c]) && allPlayers[j].granades[i].fallSpeed>10)
+						{
+							allPlayers[j].granades[i].fallen=true;
+							allPlayers[j].granades[i].model.y=allplatformsbase[c].y-allplatformsbase[c].height;
 							allPlayers[j].granades[i].fallSpeed=allPlayers[j].granades[i].fallSpeed/-2;
 							allPlayers[j].granades[i].speed=allPlayers[j].granades[i].speed/1.5;
 						}      
@@ -746,6 +781,11 @@ package
 				allPlatformsOfLevel1.splice(k,1);
 			}
 			
+			for (var c:int = 0; c < allplatformsbase.length; c++) 
+			{
+				allplatformsbase.splice(c,1);
+			}
+			
 			for (var j:int = 0; j < allWallsOfLevel1.length; j++) 
 			{
 				allWallsOfLevel1.splice(j,1);
@@ -759,6 +799,7 @@ package
 			cam=new Camera
 			Locator.mainStage.removeEventListener(Event.ENTER_FRAME, update)
 			audio.stop();
+			
 		}
 	}
 }
