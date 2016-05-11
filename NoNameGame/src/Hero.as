@@ -395,8 +395,16 @@ package
 					{
 						granadebool=true
 						blockeodeanimacion=true;
-						changeAnimation(ANIM_SHOTANIM);
 						
+						if (isjumping)
+						{
+							throwGranade();
+							blockeodeanimacion=false;
+						}
+						else
+						{
+							changeAnimation(ANIM_SHOTANIM);
+						}
 						deleteArrowForThrowingGranade();
 						holding=false;
 						
