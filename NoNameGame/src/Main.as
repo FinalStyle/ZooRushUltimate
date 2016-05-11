@@ -322,11 +322,13 @@ package
 			{
 				if(j==0)
 				{
+				
 					gfilter..color=0xff0000;
 					gfilter.strength=2;
 					gfilter.quality=15;
 					player = new RedPanda(Keyboard.W, Keyboard.S, Keyboard.D, Keyboard.A,Keyboard.SPACE, Keyboard.Q);
-					player.model.filters = [gfilter]
+					/*player.model.filters = [gfilter]*/
+					
 					
 					allPlayers.push(player);
 				}
@@ -339,7 +341,11 @@ package
 					gfilter.strength=5
 					gfilter.strength=2;
 					gfilter.quality=15;
-					player.model.filters = [gfilter]
+					/*player.model.filters = [gfilter]*/
+				/*	player.model.transform.colorTransform= new ColorTransform(2.55,2.06,0.88)*/
+					/*player.model.transform.colorTransform= new ColorTransform(1.69,2.32,2.55)*/
+					/*player.model.transform.colorTransform= new ColorTransform(1.69,1.92,2.05)*/
+					player.model.transform.colorTransform= new ColorTransform(1.35,1.66,1.77)
 					allPlayers.push(player);
 				}
 				else if(j==2)
@@ -466,7 +472,7 @@ package
 				var horn:Sound=Locator.assetsManager.getSound("victoryhorn")
 				audioselection = new SoundController(yeah);
 				audiovictory = new SoundController(horn);
-				audiovictory.play(2);
+				audiovictory.play(0);
 				audiovictory.volume=0.3;
 				audioselection.play(0);
 				audioselection.volume=0.3;
